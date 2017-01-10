@@ -35,11 +35,27 @@ struct DirectedGraphNode {
      DirectedGraphNode(int x) : label(x) {};
 };
 
+
+class ListNode {
+public:
+    int val;
+    ListNode *next;
+    ListNode(int val) {
+        this->val = val;
+        this->next = NULL;
+    }
+};
+
 class GraphAndSearch
 {
     void test();
 };
 
+
+class DataStructure
+{
+    void test();
+};
 
 #endif /* GraphAndSearch_hpp */
 

@@ -503,6 +503,51 @@ int totalNQueens(int n) {
     return sum;
 }
 
+#pragma mark - Subsets
+
+//Given a set of distinct integers, return all possible subsets.
+//
+//Notice
+//
+//Elements in a subset must be in non-descending order.
+//The solution set must not contain duplicate subsets.
+//Have you met this question in a real interview? Yes
+//Example
+//If S = [1,2,3], a solution is:
+//
+//[
+// [3],
+// [1],
+// [2],
+// [1,2,3],
+// [1,3],
+// [2,3],
+// [1,2],
+// []
+// ]
+
+
+void helperSubset(vector<vector<int> > &results, vector<int> subset, vector<int> &nums, int start)
+{
+    results.push_back(subset);
+    for(int i=start; i<nums.size(); i++)
+    {
+        subset.push_back(nums[i]);
+        helperSubset(results, subset, nums, i+1);
+        subset.pop_back();
+    }
+}
+
+vector<vector<int> > subsets(vector<int> &nums) {
+    // write your code here
+    vector<vector<int> > sets;
+    vector<int> set;
+    
+    helperSubset(sets, set, nums, 0);
+    return sets;
+}
+
+
 
 #pragma mark - Subsets II
 
@@ -566,6 +611,64 @@ vector<vector<int> > subsetsWithDup( vector<int> &num) {
 }
 
 
+#pragma mark - Permutations
+
+//Given a list of numbers, return all possible permutations.
+//
+//Notice
+//
+//You can assume that there is no duplicate numbers in the list.
+//
+//Have you met this question in a real interview? Yes
+//Example
+//For nums = [1,2,3], the permutations are:
+//
+//[
+// [1,2,3],
+// [1,3,2],
+// [2,1,3],
+// [2,3,1],
+// [3,1,2],
+// [3,2,1]
+// ]
+
+void helperP1(vector<vector<int> > &result,vector<int> sub, vector<int> nums, unordered_map<int, bool> &hashSub)
+{
+    //跟 subsets 的区别
+    if(sub.size() == nums.size())
+    {
+        result.push_back(sub);
+        return;//!!! return 一般用在退出循环的地方
+    }
+    
+    for(int i=0; i<nums.size(); i++)
+    {
+        int num = nums[i];
+        if(hashSub[num])
+        {
+            continue;//!!!important, 如果存在，就下一个数,不能用return
+        }
+        
+        sub.push_back(num);
+        hashSub[num] = true;
+        
+        helperP1(result, sub, nums, hashSub);
+        
+        //important
+        sub.pop_back();
+        hashSub[num] = false;
+    }
+}
+
+vector<vector<int> > permute(vector<int> nums) {
+    // write your code here
+    vector<vector<int>> result;
+    vector<int> sublist;
+    unordered_map<int, bool> hashSub;
+    
+    helperP1(result, sublist, nums, hashSub);
+    return result;
+}
 
 
 
@@ -632,6 +735,68 @@ vector<vector<int> > permuteUnique(vector<int> &nums) {
 
 
 
+#pragma mark - String Permutation II
+//Given a string, find all permutations of it without duplicates.
+//
+//Have you met this question in a real interview? Yes
+//Example
+//Given "abb", return ["abb", "bab", "bba"].
+//
+//Given "aabb", return ["aabb", "abab", "baba", "bbaa", "abba", "baab"].
+void helperSP(vector<string> &re, string& str,  string sub,
+             unordered_map<int, bool> &hash)
+{
+    //exit
+    if(sub.size()  == str.size())
+    {
+        re.push_back(sub);
+        return;
+    }
+    
+    
+    for(int i=0; i<str.size(); i++)//0 顺序可变
+    {
+        // igonore
+        if(hash[i])
+            continue;
+        
+        if (i > 0 && hash[i - 1] == false && str[i] == str[i-1]) //check重复的
+            continue;
+        
+        sub += + str[i];
+        hash[i] = true;
+        
+        helperSP(re, str, sub, hash);
+        
+        sub.erase(sub.end()-1);
+        hash[i] = false;
+    }
+}
+
+vector<string> stringPermutation2(string& str) {
+    //不可以重复取值
+    unordered_map<int, bool> hash;
+    
+    vector<string> re;
+    long length = str.size();
+    
+    //exit
+    if(length <= 1)
+    {
+        re.push_back(str);
+        return re;
+    }
+    
+    sort(str.begin(), str.end());
+    
+    string s;
+    helperSP(re, str, s, hash);
+    return re;
+}
+
+
+
+
 #pragma mark - Word Ladder
 //
 //Given two words (start and end), and a dictionary, find the length of shortest transformation sequence from start to end, such that:
@@ -658,7 +823,7 @@ int ladderLength1(string start, string end, unordered_set<string> &dict) {
     if (start == end) {
         return 1;
     }
-    int n = start.size();
+    long n = start.size();
     if (n < 1 || n != end.size()) {
         return 0;
     }
@@ -669,7 +834,7 @@ int ladderLength1(string start, string end, unordered_set<string> &dict) {
     int length = 2;
     
     while (!Q.empty()) {
-        int size = Q.size();
+        long size = Q.size();
         for (int i = 0; i < size; i++) {
             string word = Q.front(); Q.pop();
             for (int i = 0; i < n; i++) {
@@ -717,7 +882,7 @@ int bfsWord(unordered_set<string> &dict,
     int count = 2;
     while(q.size())
     {
-        int sizeQ = q.size();
+        long sizeQ = q.size();
         for(int i=0; i<sizeQ; i++)
         {
             string s = q.front();
@@ -877,6 +1042,186 @@ vector<vector<string>> findLadders(string start, string end, unordered_set<strin
     dfsWord2( re, sub,  start, end, height, hash);
     return re;
 }
+
+
+#pragma mark - k Sum II
+
+//Given n unique integers, number k (1<=k<=n) and target.
+//
+//Find all possible k integers where their sum is target.
+//
+//Have you met this question in a real interview? Yes
+//Example
+//Given [1,2,3,4], k = 2, target = 5. Return:
+//
+//[
+// [1,4],
+// [2,3]
+// ]
+
+void helperSum(vector<vector<int> > &re, vector<int> &sub,
+            vector<int> &A, int sum, int target, int index, int k)
+{
+    //exit
+    if(sum == target && sub.size() == k)
+    {
+        re.push_back(sub);
+        return;
+    }
+    
+    for(int i= index; i< A.size(); i++)
+    {
+        int number = A[i] + sum;
+        if(number > target)
+            return;
+        
+        sub.push_back(A[i]);
+        helperSum(re, sub, A, number, target, i+1, k);//i+1
+        sub.pop_back();
+    }
+}
+
+vector<vector<int> > kSumII(vector<int> A, int k, int target) {
+    // write your code here
+    sort(A.begin(), A.end());
+    vector<vector<int> > re;
+    vector<int> sub;
+    
+    helperSum(re, sub, A, 0, target, 0,  k);
+    return re;
+}
+
+#pragma mark -  N-Queens
+
+//The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other.
+//
+//Given an integer n, return all distinct solutions to the n-queens puzzle.
+//
+//Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space respectively.
+//
+//Have you met this question in a real interview? Yes
+//Example
+//There exist two distinct solutions to the 4-queens puzzle:
+//
+//[
+// // Solution 1
+// [".Q..",
+//  "...Q",
+//  "Q...",
+//  "..Q."
+//  ],
+// // Solution 2
+// ["..Q.",
+//  "Q...",
+//  "...Q",
+//  ".Q.."
+//  ]
+// ]
+
+
+
+string intToString(long num, long size)
+{
+    string s;
+    for(int i=0; i<size; i++)
+    {
+        if(num == i)
+        {
+            s += "Q";
+        }
+        else
+        {
+            s += ".";
+        }
+    }
+    return s;
+}
+
+vector<string> intVToStringV(vector<int> &v)
+{
+    vector<string> re;
+    for(int i=0; i<v.size(); i++)
+    {
+        re.push_back(intToString(v[i], v.size()));
+    }
+    return re;
+}
+
+bool isValidQueen(vector<int> nums, int col,
+                  unordered_map<int, bool> &hashSub)
+{
+    if(hashSub[col])
+        return false;
+    
+    long size = nums.size();
+    for(int i=0; i<size; i++)
+    {
+        if(nums[i]+i == size + col)//top right - left
+        {
+            return false;
+        }
+        
+        if(nums[i]-i == col - size)//top left - right
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+void helperQueen(vector<int> sub,
+                 int n,
+                 unordered_map<int, bool> &hashSub,
+                 vector<vector<string> > &resultS)
+{
+    //exit
+    if(sub.size() == n )
+    {
+        vector<string> re;
+        re = intVToStringV(sub);
+        resultS.push_back(re);
+        return;
+    }
+    
+    //main
+    for(int i=0; i< n; i++)
+    {
+        //exit
+        if(!isValidQueen(sub, i, hashSub))
+            continue;
+        
+        //important
+        sub.push_back(i);
+        hashSub[i] = true;
+        
+        helperQueen( sub,n, hashSub, resultS);
+        
+        sub.pop_back();
+        hashSub[i] = false;
+        
+    }
+}
+
+vector<vector<string> > solveNQueens(int n) {
+    // write your code here
+    vector<int> sublist;
+    unordered_map<int, bool> hashSub;
+    vector<int> nums;
+    
+    vector<vector<string>>  resultS;
+    if(n==0 || n==2 || n==3)
+    {
+        // resultS.push_back(vector<string>());
+        return resultS;
+    }
+    
+    
+    helperQueen(sublist, n, hashSub,resultS);
+    return resultS;
+}
+
+
 
 
 #pragma mark - test
