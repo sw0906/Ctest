@@ -22,6 +22,17 @@
 
 using namespace std;
 
+
+class TreeNode {
+public:
+    int val;
+    TreeNode *left, *right;
+    TreeNode(int val) {
+        this->val = val;
+        this->left = this->right = NULL;
+    }
+};
+
 struct UndirectedGraphNode {
     int label;
     vector<UndirectedGraphNode *> neighbors;
@@ -54,6 +65,12 @@ class GraphAndSearch
 
 class DataStructure
 {
+    void test();
+};
+
+class BinaryTreeAndDC
+{
+public:
     void test();
 };
 
