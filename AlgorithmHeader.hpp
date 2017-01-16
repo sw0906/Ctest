@@ -57,16 +57,25 @@ public:
     }
 };
 
+
+//ArrayAndNumbers
+class ArrayAndNumbers
+{
+    void test();
+};
+
+class DataStructure
+{
+    void test();
+};
+
+
 class GraphAndSearch
 {
     void test();
 };
 
 
-class DataStructure
-{
-    void test();
-};
 
 class BinaryTreeAndDC
 {
