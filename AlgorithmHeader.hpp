@@ -58,6 +58,12 @@ public:
 };
 
 
+
+class Dp2
+{
+    void test();
+};
+
 class LinkedList
 {
     void test();
