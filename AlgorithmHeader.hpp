@@ -58,6 +58,12 @@ public:
 };
 
 
+class LinkedList
+{
+    void test();
+};
+
+
 //ArrayAndNumbers
 class ArrayAndNumbers
 {
