@@ -773,6 +773,9 @@ void helperSP(vector<string> &re, string& str,  string sub,
     }
 }
 
+
+
+
 vector<string> stringPermutation2(string& str) {
     //不可以重复取值
     unordered_map<int, bool> hash;
